@@ -16,13 +16,11 @@ COPY . .
 RUN npx prisma generate
 RUN npm run build
 
-# Create data directory for SQLite persistence
-RUN mkdir -p /app/data
-
 EXPOSE 3000
 
-# Start script: migrate + seed (if empty) + start server
+# Start script: migrate + seed + start server
+# Railway provides DATABASE_URL automatically
 CMD sh -c "\
-  DATABASE_URL=file:/app/data/nutridrip.db npx prisma migrate deploy && \
-  DATABASE_URL=file:/app/data/nutridrip.db npx tsx prisma/seed.ts 2>/dev/null; \
-  DATABASE_URL=file:/app/data/nutridrip.db npm start"
+  npx prisma migrate deploy && \
+  npx tsx prisma/seed.ts 2>/dev/null; \
+  npm start"
