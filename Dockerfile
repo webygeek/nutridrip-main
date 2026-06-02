@@ -21,6 +21,7 @@ EXPOSE 3000
 # Start script: migrate + seed + start server
 # Railway provides DATABASE_URL automatically
 CMD sh -c "\
+  echo 'DATABASE_URL: $${DATABASE_URL}' && \
   npx prisma migrate deploy && \
-  npx tsx prisma/seed.ts 2>/dev/null; \
+  npx tsx prisma/seed.ts || true && \
   npm start"
