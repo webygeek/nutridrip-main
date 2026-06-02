@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: nutridrip-app
+    ports:
+      - '3006:3000'
+    environment:
+      - DATABASE_URL=file:/app/data/nutridrip.db
+    volumes:
+      - nutridrip-data:/app/data
+
+volumes:
+  nutridrip-data:

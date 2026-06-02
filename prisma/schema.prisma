@@ -1,0 +1,314 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Users & Auth ────────────────────────────────────────────────────────────
+
+model User {
+  id               String        @id @default(cuid())
+  email            String        @unique
+  password         String
+  name             String
+  role             String        @default("patient")
+  permissions      String        @default("[]")
+  status           String        @default("active")
+  phone            String        @default("")
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  dob              String        @default("")
+  bloodGroup       String        @default("")
+  address          String        @default("")
+  emergencyContact String        @default("")
+  allergies        String        @default("")
+  chronicConditions String       @default("")
+  currentMedications String      @default("")
+  surgeries        String        @default("")
+  familyHistory    String        @default("")
+  lifestyleNotes   String        @default("")
+
+  specialty        String        @default("")
+  qualifications   String        @default("")
+  experience       String        @default("")
+  rnNumber         String        @default("")
+  shift            String        @default("")
+  certifications   String        @default("[]")
+  rating           Float         @default(0)
+  languages        String        @default("[]")
+
+  bookings         Booking[]
+  labReports       LabReport[]
+  approvals        Approval[]
+  sessions         UserSession[]
+  notifications    Notification[]
+}
+
+// ─── Session Tokens ──────────────────────────────────────────────────────────
+
+model UserSession {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─── Drips ───────────────────────────────────────────────────────────────────
+
+model Drip {
+  id             String    @id @default(cuid())
+  slug           String    @unique
+  name           String
+  subtitle       String    @default("")
+  description    String    @default("")
+  category       String    @default("")
+  price          Int       @default(0)
+  duration       String    @default("")
+  volume         String    @default("")
+  icon           String    @default("")
+  accentGradient String    @default("")
+  ingredients    String    @default("[]")
+  benefits       String    @default("[]")
+  vitaminInfo    String    @default("{}")
+  tags           String    @default("[]")
+  popular        Boolean   @default(false)
+  active         Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  bookings       Booking[]
+}
+
+// ─── Bookings ────────────────────────────────────────────────────────────────
+
+model Booking {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+  dripId          String
+  drip            Drip      @relation(fields: [dripId], references: [id])
+  scheduledAt     DateTime
+  status          String    @default("scheduled")
+  sessionStatus   String    @default("scheduled")
+  location        String    @default("home")
+  address         String    @default("")
+  amount          Int       @default(0)
+  nurseId         String    @default("")
+  nurseName       String    @default("")
+  nursePhone      String    @default("")
+  doctorId        String    @default("")
+  doctorName      String    @default("")
+  doctorNotes     String    @default("")
+  protocol        String    @default("[]")
+  etaMinutes      Int       @default(0)
+  notes           String    @default("")
+  assignedAt      DateTime?
+  startedAt       DateTime?
+  completedAt     DateTime?
+  cancelledAt     DateTime?
+  cancellationFee Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  consent         ConsentRecord?
+  sessionEvents   SessionEvent[]
+  feedback        SessionFeedback?
+  cancellations   CancellationLog[]
+}
+
+// ─── Protocol Approvals ──────────────────────────────────────────────────────
+
+model Approval {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  dripName    String
+  severity    String   @default("Recommended")
+  status      String   @default("pending")
+  customNotes String   @default("")
+  doctorId    String   @default("")
+  doctorName  String   @default("")
+  nurseId     String   @default("")
+  nurseName   String   @default("")
+  nursePhone  String   @default("")
+  protocol    String   @default("[]")
+  score       Int      @default(0)
+  bookingId   String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── Consent Records ─────────────────────────────────────────────────────────
+
+model ConsentRecord {
+  id              String   @id @default(cuid())
+  bookingId       String   @unique
+  booking         Booking  @relation(fields: [bookingId], references: [id])
+  patientId       String
+  signatureName   String   @default("")
+  fingerprintHash String   @default("")
+  faceScanHash    String   @default("")
+  ipAddress       String   @default("")
+  userAgent       String   @default("")
+  nurseId         String   @default("")
+  signedAt        DateTime @default(now())
+}
+
+// ─── Session Events (status history) ─────────────────────────────────────────
+
+model SessionEvent {
+  id          String   @id @default(cuid())
+  bookingId   String
+  booking     Booking  @relation(fields: [bookingId], references: [id])
+  status      String
+  notes       String   @default("")
+  etaMinutes  Int      @default(0)
+  updatedById String   @default("")
+  createdAt   DateTime @default(now())
+}
+
+// ─── Session Feedback ─────────────────────────────────────────────────────────
+
+model SessionFeedback {
+  id              String   @id @default(cuid())
+  bookingId       String   @unique
+  booking         Booking  @relation(fields: [bookingId], references: [id])
+  patientId       String
+  hygieneRating   Int      @default(0)
+  behaviourRating Int      @default(0)
+  comfortRating   Int      @default(0)
+  overallRating   Int      @default(0)
+  comment         String   @default("")
+  isDuringDrip    Boolean  @default(false)
+  submittedAt     DateTime @default(now())
+}
+
+// ─── Cancellation Logs ────────────────────────────────────────────────────────
+
+model CancellationLog {
+  id           String    @id @default(cuid())
+  bookingId    String
+  booking      Booking   @relation(fields: [bookingId], references: [id])
+  requestedBy  String
+  type         String
+  reason       String    @default("")
+  originalDate DateTime
+  newDate      DateTime?
+  feeAmount    Int       @default(0)
+  isSameDay    Boolean   @default(false)
+  status       String    @default("pending")
+  createdAt    DateTime  @default(now())
+}
+
+// ─── Notifications ────────────────────────────────────────────────────────────
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  body      String
+  type      String   @default("info")
+  link      String   @default("")
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// ─── Lab Reports ─────────────────────────────────────────────────────────────
+
+model LabReport {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  fileName   String
+  filePath   String   @default("")
+  fileSize   Int      @default(0)
+  category   String   @default("")
+  notes      String   @default("")
+  uploadedAt DateTime @default(now())
+}
+
+// ─── Content Overrides (CMS) ──────────────────────────────────────────────────
+
+model ContentBlock {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+  updatedBy String   @default("")
+}
+
+// ─── Assignments ──────────────────────────────────────────────────────────────
+
+model Assignment {
+  id           String   @id @default(cuid())
+  type         String
+  personId     String
+  personName   String
+  areaOrTarget String
+  priority     Int      @default(1)
+  createdAt    DateTime @default(now())
+}
+
+// ─── Partner Clinics ──────────────────────────────────────────────────────────
+
+model Clinic {
+  id            String   @id @default(cuid())
+  name          String
+  location      String   @default("")
+  contact       String   @default("")
+  email         String   @default("")
+  phone         String   @default("")
+  address       String   @default("")
+  status        String   @default("pending")
+  monthlyVolume Int      @default(0)
+  partnersSince DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// ─── Infusion Orders ──────────────────────────────────────────────────────────
+
+model InfusionOrder {
+  id                String    @id @default(cuid())
+  bookingId         String    @default("")
+  patientId         String    @default("")
+  patientName       String
+  patientAge        Int       @default(0)
+  patientGender     String    @default("")
+  patientPhone      String    @default("")
+  patientAllergies  String    @default("")
+  patientConditions String    @default("")
+  dripName          String
+  scheduledAt       DateTime
+  location          String    @default("clinic")
+  address           String    @default("")
+  nurseId           String    @default("")
+  nurseName         String    @default("")
+  doctorName        String    @default("")
+  doctorPhone       String    @default("")
+  doctorNotes       String    @default("")
+  protocol          String    @default("[]")
+  mixingProtocol    String    @default("[]")
+  infusionRate      Int       @default(0)
+  totalVolume       Int       @default(0)
+  status            String    @default("pending")
+  sessionStatus     String    @default("scheduled")
+  consentSigned     Boolean   @default(false)
+  consentSignedAt   DateTime?
+  fingerprintDone   Boolean   @default(false)
+  historyTaken      Boolean   @default(false)
+  baselineVitals    String    @default("{}")
+  checklistDone     String    @default("[]")
+  sessionNotes      String    @default("")
+  startedAt         DateTime?
+  completedAt       DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
