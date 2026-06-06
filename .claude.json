@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "railway-mcp-server": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@railway/mcp-server"],
+      "env": {
+        "RAILWAY_TOKEN": "a2f0b1fd-b802-4fef-ae72-69ee5d2596b8"
+      }
+    }
+  }
+}
