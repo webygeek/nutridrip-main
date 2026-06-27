@@ -1,0 +1,287 @@
+/**
+ * NutriDrip Design System - CSS Primitives
+ *
+ * Based on the existing brand theme.
+ * Use these as building blocks for consistent UI.
+ */
+
+/* ─── Color Palette ─────────────────────────────────────────────── */
+:root {
+  /* Brand Colors */
+  --teal: #1A7EA8;
+  --teal-dark: #0F5C7D;
+  --sky: #5BB8F5;
+  --sky-pale: #E8F5FC;
+  --sky-bg: #EEF6FB;
+
+  /* Text Colors */
+  --text: #0E2233;
+  --text-2: #4A5F72;
+  --text-3: #8A9BAD;
+
+  /* Neutral */
+  --white: #FFFFFF;
+  --off-white: #FAFBFC;
+  --border: #E2E8F0;
+
+  /* Accent */
+  --gold: #F5A623;
+  --rose: #F43F5E;
+
+  /* Semantic */
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --info: #3B82F6;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(14, 34, 51, 0.05);
+  --shadow-md: 0 4px 12px rgba(14, 34, 51, 0.08);
+  --shadow-lg: 0 12px 32px rgba(14, 34, 51, 0.12);
+  --shadow-xl: 0 24px 48px rgba(14, 34, 51, 0.16);
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-display: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Lora', Georgia, serif;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+}
+
+/* ─── Typography ─────────────────────────────────────────────── */
+.text-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.text-body {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.text-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+/* ─── Buttons ─────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  border: none;
+}
+
+.btn-primary {
+  background: var(--teal);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--teal-dark);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--white);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--teal);
+  border: 1.5px solid var(--teal);
+}
+
+.btn-ghost:hover {
+  background: var(--teal);
+  color: white;
+}
+
+/* ─── Cards ─────────────────────────────────────────────── */
+.card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-interactive {
+  transition: all 0.2s ease;
+}
+
+.card-interactive:hover {
+  border-color: var(--sky);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ─── Form Elements ─────────────────────────────────────────────── */
+.input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--text);
+  background: var(--white);
+  transition: border-color 0.15s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--teal);
+}
+
+.input::placeholder {
+  color: var(--text-3);
+}
+
+/* ─── Layout Utilities ─────────────────────────────────────────────── */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-2 { gap: var(--space-2); }
+.gap-4 { gap: var(--space-4); }
+.gap-6 { gap: var(--space-6); }
+.gap-8 { gap: var(--space-8); }
+
+/* ─── Status Badges ─────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-success {
+  background: #DCFCE7;
+  color: #16A34A;
+}
+
+.badge-warning {
+  background: #FEF3C7;
+  color: #D97706;
+}
+
+.badge-error {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
+.badge-info {
+  background: var(--sky-pale);
+  color: var(--teal);
+}
+
+/* ─── App Shell Primitives ─────────────────────────────────────────────── */
+/* For dashboard/app shell use */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-sidebar {
+  width: 248px;
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 100;
+}
+
+.app-main {
+  flex: 1;
+  margin-left: 248px;
+  background: var(--sky-bg);
+}
+
+.app-header {
+  height: 64px;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-8);
+}
+
+.app-content {
+  padding: var(--space-8);
+}
+
+/* ─── Mobile ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .app-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .app-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .app-main {
+    margin-left: 0;
+  }
+}
