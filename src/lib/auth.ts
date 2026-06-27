@@ -148,12 +148,18 @@ export function useAuth() {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    setUser(getCurrentUser());
+    // Get user from localStorage
+    const currentUser = getCurrentUser();
+    setUser(currentUser);
     setIsReady(true);
 
-    const handleChange = () => setUser(getCurrentUser());
+    const handleChange = () => {
+      setUser(getCurrentUser());
+    };
+
     window.addEventListener("nutridrip_auth_change", handleChange);
     window.addEventListener("storage", handleChange);
+
     return () => {
       window.removeEventListener("nutridrip_auth_change", handleChange);
       window.removeEventListener("storage", handleChange);
