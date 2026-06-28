@@ -525,7 +525,7 @@ function BookingsSection({ bookings }: { bookings: Booking[] }) {
 // ─── Page component ───────────────────────────────────────────────────────────
 
 export default function PatientDashboard() {
-  const { user, isLoggedIn, isReady } = useAuth();
+  const { user, isReady } = useAuth();
   const [profile, setProfile] = useState<PatientProfile>(EMPTY_PROFILE);
   const [reports, setReports] = useState<LabReport[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -534,7 +534,13 @@ export default function PatientDashboard() {
 
   // Load data from APIs
   useEffect(() => {
-    if (!isReady || !isLoggedIn) return;
+    if (!isReady) return;
+
+    const token = getToken();
+    if (!token) {
+      setLoading(false);
+      return;
+    }
 
     async function loadData() {
       const token = getToken();
@@ -599,7 +605,7 @@ export default function PatientDashboard() {
     }
 
     loadData();
-  }, [isReady, isLoggedIn]);
+  }, [isReady]);
 
   if (loading) {
     return (
