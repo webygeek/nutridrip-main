@@ -347,14 +347,8 @@ interface AppShellProps {
 export default function AppShell({ children, title = "Dashboard" }: AppShellProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { user, isLoggedIn, isReady, role } = useAuth();
+  const { user, role } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  useEffect(() => {
-    if (isReady && !isLoggedIn) {
-      router.push("/login");
-    }
-  }, [isReady, isLoggedIn, router]);
 
   const handleLogout = () => {
     logout();
@@ -363,20 +357,6 @@ export default function AppShell({ children, title = "Dashboard" }: AppShellProp
 
   const navItems = role ? NAV_BY_ROLE[role] || [] : [];
   const initials = user?.name?.split(" ").map(p => p[0]).slice(0, 2).join("").toUpperCase() || "U";
-
-  if (!isReady || !isLoggedIn) {
-    return (
-      <div style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "var(--sky-bg)"
-      }}>
-        <div style={{ color: "var(--text-3)" }}>Loading...</div>
-      </div>
-    );
-  }
 
   return (
     <>
